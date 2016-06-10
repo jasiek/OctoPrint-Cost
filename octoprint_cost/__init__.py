@@ -12,28 +12,30 @@ from __future__ import absolute_import
 import octoprint.plugin
 
 class CostPlugin(octoprint.plugin.SettingsPlugin,
-                 octoprint.plugin.AssetPlugin,
-                 octoprint.plugin.TemplatePlugin):
-
-	##~~ SettingsPlugin mixin
+                 octoprint.plugin.TemplatePlugin,
+                 octoprint.plugin.AssetPlugin):
 
 	def get_settings_defaults(self):
 		return dict(
-			# put your plugin's default settings here
+                        cost_per_hour=1.50,
+                        cost_per_meter=0.5,
+                        currency='£'
 		)
 
-	##~~ AssetPlugin mixin
+        def get_template_configs(self):
+                return [
+                        dict(type="settings", custom_bindings=False),
+                ]
 
-	def get_assets(self):
-		# Define your plugin's asset files to automatically include in the
-		# core UI here.
-		return dict(
-			js=["js/cost.js"],
-			css=["css/cost.css"],
-			less=["less/cost.less"]
-		)
+        def get_template_vars(self):
+                return dict(
+                        cost_per_hour=self._settings.get(["cost_per_hour"]),
+                        cost_per_meter=self._settings.get(["cost_per_meter"]),
+                        currency=self._settings.get(["currency"])
+                )
 
-	##~~ Softwareupdate hook
+        def get_assets(self):
+                return dict(js=["js/cost.js"])
 
 	def get_update_information(self):
 		# Define the configuration for your plugin to use with the Software Update
