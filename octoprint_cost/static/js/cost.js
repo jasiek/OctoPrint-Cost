@@ -12,8 +12,8 @@ $(function() {
 
         // There must be a nicer way of doing this.
         printerState.costString = ko.pureComputed(function() {
-            if (settingsState.settings === undefined) return '';
-            if (printerState.filament().length == 0) return '';
+            if (settingsState.settings === undefined) return '-';
+            if (printerState.filament().length == 0) return '-';
             
             var currency = settingsState.settings.plugins.cost.currency();
             var cost_per_meter = settingsState.settings.plugins.cost.cost_per_meter();
