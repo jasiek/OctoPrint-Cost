@@ -32,16 +32,22 @@ $(function() {
         filesState.getAdditionalData = function(data) {
             var output = originalGetAdditionalData(data);
 
-            var currency = settingsState.settings.plugins.cost.currency();
-            var cost_per_meter = settingsState.settings.plugins.cost.cost_per_meter();
-            var cost_per_hour = settingsState.settings.plugins.cost.cost_per_hour();
+            if (data.hasOwnProperty('gcodeAnalysis')) {
+                var gcode = data.gcodeAnalysis;
+                if (gcode.hasOwnProperty('filament') && gcode.filament.hasOwnProperty('tool0') && gcode.hasOwnProperty('estimatedPrintTime')) {
+                    var currency = settingsState.settings.plugins.cost.currency();
+                    var cost_per_meter = settingsState.settings.plugins.cost.cost_per_meter();
+                    var cost_per_hour = settingsState.settings.plugins.cost.cost_per_hour();
 
-            var filament_used_meters = data["gcodeAnalysis"]["filament"]["tool0"].length / 1000;
-            var expected_time_hours = data["gcodeAnalysis"]["estimatedPrintTime"] / 3600;
+                    var filament_used_meters = gcode.filament.tool0.length / 1000;
+                    var expected_time_hours = gcode.estimatedPrintTime / 3600;
 
-            var totalCost = cost_per_meter * filament_used_meters + expected_time_hours * cost_per_hour;
+                    var totalCost = cost_per_meter * filament_used_meters + expected_time_hours * cost_per_hour;
 
-            output += gettext("Cost") + ": " + currency + totalCost.toFixed(2);;
+                    output += gettext("Cost") + ": " + currency + totalCost.toFixed(2);
+                }
+            }
+            
             return output;
         };
         
