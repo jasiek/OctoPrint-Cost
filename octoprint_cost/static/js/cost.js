@@ -12,19 +12,46 @@ $(function() {
         var self = this;
 
         // There must be a nicer way of doing this.
+	
+	settingsState.check_cost = ko.observable(true);
+
+	settingsState.costPerWeight = ko.pureComputed(function() {
+	  var currency = settingsState.settings.plugins.cost.currency();
+	  var weight = settingsState.settings.plugins.cost.weight();
+	  return currency + '/' + weight;
+	});
+	settingsState.costPerLength = ko.pureComputed(function() {
+	  var currency = settingsState.settings.plugins.cost.currency();
+	  var length = settingsState.settings.plugins.cost.length();
+	  return currency + '/' + length;
+	});
+	settingsState.costPerTime = ko.pureComputed(function() {
+	  var currency = settingsState.settings.plugins.cost.currency();
+	  var time = settingsState.settings.plugins.cost.time();
+	  return currency + '/' + time;
+	});
+	
         printerState.costString = ko.pureComputed(function() {
             if (settingsState.settings === undefined) return '-';
             if (printerState.filament().length == 0) return '-';
-            
+
             var currency = settingsState.settings.plugins.cost.currency();
-            var cost_per_meter = settingsState.settings.plugins.cost.cost_per_meter();
-            var cost_per_hour = settingsState.settings.plugins.cost.cost_per_hour();
+	    var cost_per_length = settingsState.settings.plugins.cost.cost_per_length();
+	    var cost_per_weight = settingsState.settings.plugins.cost.cost_per_weight();
+	    var density_of_filament = settingsState.settings.plugins.cost.density_of_filament();
+            var cost_per_time = settingsState.settings.plugins.cost.cost_per_time();
 
-            var filament_used_meters = printerState.filament()[0].data().length / 1000;
-            var expected_time_hours = printerState.estimatedPrintTime() / 3600;
+            var filament_used_length = printerState.filament()[0].data().length / 1000;
+	    var filament_used_volume = printerState.filament()[0].data().volume / 1000;
+            var expected_time = printerState.estimatedPrintTime() / 3600;
 
-            var totalCost = cost_per_meter * filament_used_meters + expected_time_hours * cost_per_hour;
-            
+	    if (settingsState.check_cost()) {
+	      var totalCost = cost_per_weight * filament_used_volume * density_of_filament + expected_time * cost_per_time;
+	    }
+	    else {
+	      var totalCost = cost_per_length * filament_used_length + expected_time * cost_per_time;
+	    }
+
             return '' + currency + totalCost.toFixed(2);
         });
 
@@ -36,21 +63,29 @@ $(function() {
                 var gcode = data.gcodeAnalysis;
                 if (gcode.hasOwnProperty('filament') && gcode.filament.hasOwnProperty('tool0') && gcode.hasOwnProperty('estimatedPrintTime')) {
                     var currency = settingsState.settings.plugins.cost.currency();
-                    var cost_per_meter = settingsState.settings.plugins.cost.cost_per_meter();
-                    var cost_per_hour = settingsState.settings.plugins.cost.cost_per_hour();
+		    var cost_per_length = settingsState.settings.plugins.cost.cost_per_length();
+                    var cost_per_weight = settingsState.settings.plugins.cost.cost_per_weight();
+		    var density_of_filament = settingsState.settings.plugins.cost.density_of_filament();
+                    var cost_per_time = settingsState.settings.plugins.cost.cost_per_time();
 
-                    var filament_used_meters = gcode.filament.tool0.length / 1000;
-                    var expected_time_hours = gcode.estimatedPrintTime / 3600;
+                    var filament_used_length = gcode.filament.tool0.length / 1000;
+		    var filament_used_volume = gcode.filament.tool0.volume / 1000;
+                    var expected_time = gcode.estimatedPrintTime / 3600;
 
-                    var totalCost = cost_per_meter * filament_used_meters + expected_time_hours * cost_per_hour;
+		    if (settingsState.check_cost()) {
+		      var totalCost = cost_per_weight * filament_used_volume * density_of_filament + expected_time * cost_per_time;
+		    }
+		    else {
+		      var totalCost = cost_per_length * filament_used_length + expected_time * cost_per_time;
+		    }
 
                     output += gettext("Cost") + ": " + currency + totalCost.toFixed(2);
                 }
             }
-            
+
             return output;
         };
-        
+
         self.onStartup = function() {
             var element = $("#state").find(".accordion-inner .progress");
             if (element.length) {
