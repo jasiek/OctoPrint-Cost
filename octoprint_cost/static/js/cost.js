@@ -44,7 +44,7 @@ $(function() {
 
                     var totalCost = cost_per_meter * filament_used_meters + expected_time_hours * cost_per_hour;
 
-                    output += gettext("Cost") + ": " + currency + totalCost.toFixed(2);
+                    output += "<br>" + gettext("Cost") + ": " + currency + totalCost.toFixed(2);
                 }
             }
             
