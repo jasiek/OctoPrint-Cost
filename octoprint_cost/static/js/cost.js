@@ -79,7 +79,7 @@ $(function() {
 		      var totalCost = cost_per_length * filament_used_length + expected_time * cost_per_time;
 		    }
 
-                    output += gettext("Cost") + ": " + currency + totalCost.toFixed(2);
+                    output += "<br>" + gettext("Cost") + ": " + currency + totalCost.toFixed(2);
                 }
             }
 
