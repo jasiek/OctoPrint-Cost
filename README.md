@@ -1,6 +1,6 @@
 # OctoPrint-Cost
 
-This plugin will display a cost estimate based on the filament length and time to print, like this:
+This plugin will display a cost estimate based on the filament length or weight and time to print, like this:
 
 ![screenshot](doc/screenshot.png)
 
@@ -16,8 +16,9 @@ or manually using this URL:
 There are three configuration variables:
 
 * Currency - a free-form string.
-* Cost per hour - cost in currency units per one hour of use.
-* Cost per meter - cost in currency units per one meter of filament.
+* Cost per time - cost in currency units per one hour of use.
+* Cost per length - cost in currency units per one meter of filament.
+* Cost per weight - cost in currency units per one kilogram of filament.
 
 ## License (MIT)
 

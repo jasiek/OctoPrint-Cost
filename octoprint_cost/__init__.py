@@ -17,9 +17,14 @@ class CostPlugin(octoprint.plugin.SettingsPlugin,
 
 	def get_settings_defaults(self):
 		return dict(
-                        cost_per_hour=1.50,
-                        cost_per_meter=0.5,
-                        currency='£'
+			currency="€",
+                        weight="kg",
+                        length="m",
+                        time="h",
+                        cost_per_time=1.50,
+                        cost_per_length=0.08,
+                        cost_per_weight=25,
+                        density_of_filament=1.25
 		)
 
         def get_template_configs(self):
@@ -29,8 +34,10 @@ class CostPlugin(octoprint.plugin.SettingsPlugin,
 
         def get_template_vars(self):
                 return dict(
-                        cost_per_hour=self._settings.get(["cost_per_hour"]),
-                        cost_per_meter=self._settings.get(["cost_per_meter"]),
+                        cost_per_time=self._settings.get(["cost_per_time"]),
+                        cost_per_length=self._settings.get(["cost_per_length"]),
+                        cost_per_weight=self._settings.get(["cost_per_weight"]),
+                        density_of_filament=self._settings.get(["density_of_filament"]),
                         currency=self._settings.get(["currency"])
                 )
 

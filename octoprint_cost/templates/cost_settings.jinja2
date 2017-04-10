@@ -2,19 +2,50 @@
   <div class="control-group">
     <label class="control-label">{{ _('Currency') }}</label>
     <div class="controls">
-      <input type="text" class="input-block-level" data-bind="value: settings.plugins.cost.currency">
+      <input type="text" class="input-mini text-right" data-bind="value: settings.plugins.cost.currency">
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label">{{ _('Cost per hour') }}</label>
+    <label class="control-label">{{ _('Cost per time') }}</label>
     <div class="controls">
-      <input type="text" class="input-block-level" data-bind="value: settings.plugins.cost.cost_per_hour">
+      <div class="input-append">
+	<input step="0.01" min="0" class="input-mini text-right" data-bind="value: settings.plugins.cost.cost_per_time" type="number">
+	<span class="add-on" data-bind="text: costPerTime"></span>
+      </div>
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label">{{ _('Cost per meter') }}</label>
+    <label class="control-label">{{ _('Density of filament') }}</label>
     <div class="controls">
-      <input type="text" class="input-block-level" data-bind="value: settings.plugins.cost.cost_per_meter">
+      <div class="input-append">
+	<input step="0.01" min="0" class="input-mini text-right" data-bind="value: settings.plugins.cost.density_of_filament" type="number">
+	<span class="add-on">g/cm<sup>3</sup></span>
+      </div>
+    </div>
+  </div>
+  <div class="control-group" title="Makes OctoPrint try to connect to the printer automatically during start up">
+    <div class="controls">
+      <label class="checkbox">
+	<input data-bind="checked: check_cost" type="checkbox">Cost per length or weight
+      </label>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="offset3 span3">Weight</div>
+    <div class="span5">Length</div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <div class="row-fluid">
+      	<div class="input-append span4">
+	  <input step="0.01" min="0" class="input-mini text-right" data-bind="value: settings.plugins.cost.cost_per_weight, enable: check_cost" type="number">
+	  <span class="add-on" data-bind="text: costPerWeight"></span>
+	</div>
+	<div class="input-append span4">
+	  <input step="0.001" min="0" class="input-mini text-right" data-bind="value: settings.plugins.cost.cost_per_length, disable: check_cost" type="number">
+	  <span class="add-on" data-bind="text: costPerLength"></span>
+	</div>
+      </div>
     </div>
   </div>
 </form>
