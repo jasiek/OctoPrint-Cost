@@ -1,3 +1,8 @@
+# Important note regarding the maintenance of this project.
+
+I no longer have regular access to a 3D printer to be able to test changes to this plugin. If you're looking for a plugin
+which is maintained regularly, you should check out: https://github.com/malnvenshorn/OctoPrint-CostEstimation 
+
 # OctoPrint-Cost
 
 This plugin will display a cost estimate based on the filament length or weight and time to print, like this:
